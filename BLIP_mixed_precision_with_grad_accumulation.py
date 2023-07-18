@@ -301,7 +301,7 @@ def main():
     print(start_time)
 
     running_loss = 0.0
-    gradient_accumulation_steps = 7
+    gradient_accumulation_steps = 8
     optimizer = torch.optim.AdamW(model.parameters(), lr = 5e-5)
     model.train()
 
@@ -373,14 +373,11 @@ def main():
 
             # print('Curr TIme:',curr_time)
             
-            if epoch in (1,2,3,4,5,6,7,8,9) or abs(curr_time - start_time)==6 or abs(curr_time - start_time)==18:
+        if epoch in (0,1,2,3,4,5,6,7,8,9):
+            print('\n ..........Save Triggered.................... \n')
+            save_path = os.path.join("./model_chkpts/", "mod" + "_" + str(epoch) + "_" + str(current_datetime_object_in_loop.hour) + "-" + str(curr_time) + "_" + str(current_date))
+            model.save_pretrained(save_path)
                 
-                print('\nTriggered\n')
-                save_path = os.path.join("./model_chkpts/", "mod" + "_" + str(epoch) + "_" + str(current_datetime_object_in_loop.hour) + "-" + str(curr_time) + "_" + str(current_date))
-                model.save_pretrained(save_path)
-                start_time = curr_time
-                print('Start time changed to: ', start_time)
-
     writer.close()
     sys.exit()
 
