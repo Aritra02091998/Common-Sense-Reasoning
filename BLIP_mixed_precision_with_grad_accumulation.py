@@ -341,17 +341,17 @@ def main():
             # here (epoch * tot_number_of_steps + i) denotes the current step out of the total (77054 * num_of_epoch) steps.
             # And, running_loss/100 is the mean loss of 100 iterations.
             
-            if (idx+1) % 300 == 0:
+            if (idx+1) % 400 == 0:
                 
-                print(f'\n Epoch:{epoch+1}, Step:{(idx+1)/tot_number_of_steps}, Output Loss:{loss}')
+                print(f'\n\nEpoch:{epoch+1}, Step: {(idx+1)/tot_number_of_steps}, Output Loss: {loss}')
                 
                 validation_results = evaluate_validation_metrics_and_loss_on_val_set(val_set_questions,val_set_answers,val_set_images)
                 returned_bScore_1,returned_bScore_2,returned_bScore_3 = validation_results[0]
                 returned_rScore = validation_results[1]
                 returned_valLoss = validation_results[2]
                 
-                print(f'rScore: {returned_rScore}, Val Loss: {returned_valLoss}\n')
-                print(f'bScore1:{returned_bScore_1}, bScore2:{returned_bScore_2}, bScore3:{returned_bScore_3}' )
+                print(f'rScore: {returned_rScore}, Val Loss: {returned_valLoss}')
+                print(f'bScore1: {returned_bScore_1}, bScore2: {returned_bScore_2}, bScore3: {returned_bScore_3}' )
 
                 writer.add_scalar('Training Loss', running_loss/100, epoch * tot_number_of_steps + idx)
                 writer.add_scalar('Validation Loss', returned_valLoss, epoch * tot_number_of_steps + idx)
