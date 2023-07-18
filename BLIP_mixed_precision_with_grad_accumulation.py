@@ -296,10 +296,6 @@ def main():
 
     # -------------------------Training Loop With Grad Accumulation---------------------------------------
     
-    current_datetime_object = datetime.datetime.now()
-    start_time = current_datetime_object.hour
-    print(start_time)
-
     running_loss = 0.0
     gradient_accumulation_steps = 8
     optimizer = torch.optim.AdamW(model.parameters(), lr = 5e-5)
@@ -341,7 +337,7 @@ def main():
             # here (epoch * tot_number_of_steps + i) denotes the current step out of the total (77054 * num_of_epoch) steps.
             # And, running_loss/100 is the mean loss of 100 iterations.
             
-            if (idx+1) % 400 == 0:
+            if (idx+1) % 300 == 0:
                 
                 print(f'\n\nEpoch:{epoch+1}, Step: {(idx+1)/tot_number_of_steps}, Output Loss: {loss}')
                 
