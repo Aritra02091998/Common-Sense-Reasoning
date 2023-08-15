@@ -134,7 +134,7 @@ with open(val_file_path, "r") as file:
 
 # Test Set
 
-with open(val_file_path, "r") as file:
+with open(test_file_path, "r") as file:
      test_json = json.load(file)
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -249,15 +249,15 @@ modified_train_set = modified_train_set.cast_column("images", datasets.Image())
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 
-print('\nExtracting Validation Set into a Combined Set to split into val and test set')
+print('\nExtracting Validation Set')
 
-questionList_combined = []
-answerList_combined = []
-imgList_combined = []
-
-# collecting the index containing errorneous images
+questionList_val = []
+answerList_val = []
+imgList_val = []
 
 print('\nExcluding Erroneous Indices')
+
+# collecting the index containing errorneous images
 
 indexToExcludeVal = []
 with open('error_validation.txt', 'r') as file:
@@ -280,36 +280,11 @@ for i in tqdm(range(len(val_json))):
         
     pointer = val_json[i]
     
-    questionList_combined.append(pointer['question'])
-    answerList_combined.append(pointer['answer'])
-    imgList_combined.append(pointer['image_id'])
+    questionList_val.append(pointer['question'])
+    answerList_val.append(pointer['answer'])
+    imgList_val.append(pointer['image_id'])
 
-print('The size of the Combined Set is: ',len(questionList_combined))
-
-'''
-In the CRIC dataset, the validation and the test set are same, so splitting the 33170 val set into two parts that is 
-
-1. 16585 data points -> Val Set
-2. 16585 data points -> Test Set
-
-'''
-
-# Creating Splitted Val Set from Validation Set
-
-questionList_val = questionList_combined[0:16585]
-answerList_val = answerList_combined[0:16585]
-imgList_val = imgList_combined[0:16585]
-
-print('The size of the Val Set is: ',len(questionList_val))
-
-
-# Creating Splitted Test Set from Validation Set
-
-questionList_test = questionList_combined[16586:]
-answerList_test = answerList_combined[16586:]
-imgList_test = imgList_combined[16586:]
-
-print('The size of the test Set reduced is: ',len(questionList_test))
+print('The size of the val Set is: ',len(questionList_val))
 
 uniqueAnswerListVal = list(set(answerList_val))
 
@@ -356,6 +331,47 @@ modified_val_set = modified_val_set.cast_column("images", datasets.Image())
 
 #---------------------------------------------------------------------------------------------------------------------------------------
 
+print('\nExtracting Test Data Set')
+
+questionList_test = []
+answerList_test = []
+imgList_test = []
+
+
+print('\nExcluding Erroneous Indices')
+
+# collecting the index containing errorneous images
+
+
+indexToExcludeTest = []
+
+with open('error_testSet1.txt', 'r') as file:
+    for line in file:
+        number = int(line.strip())
+        indexToExcludeTest.append(number)
+        
+with open('errorTestSet2.txt', 'r') as file:
+    for line in file:
+        number = int(line.strip())
+        indexToExcludeTest.append(number)
+
+
+# excluding the index containing errorneous images
+
+for i in tqdm(range(len(test_json))):
+    
+    if i in indexToExcludeTest:
+        continue
+        
+    pointer = test_json[i]
+    
+    questionList_test.append(pointer['question'])
+    answerList_test.append(pointer['answer'])
+    imgList_test.append(pointer['image_id'])
+
+print('\nSize of the Test set is ',len(questionList_test))
+
+#---------------------------------------------------------------------------------------------------------------------------------------
 
 print('\nProcessing Test Data Set')
 
@@ -505,3 +521,4 @@ for epoch in tqdm(range(10)):
 
 writer.close()
 
+print('\nFinetuning Ends')
